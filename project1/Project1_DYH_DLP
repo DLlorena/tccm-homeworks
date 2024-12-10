@@ -1,2 +1,8 @@
 #include <studio.h>
+
 //cambios de yeli
+=======
+int main() {
+printf("Hola Caracola");
+}
+
