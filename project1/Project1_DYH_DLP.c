@@ -156,23 +156,25 @@ int main(){
         for (int i=0; i < n_integrals+1; i++){
                 printf("%f   ", value[i]);
         }					
-
 */
+
 
 	printf("repulsion energy = %lf\n",energy);
 	printf("occupied orbitals = %d\n",n_up);
 	printf("total molecular orbitals = %d\n",mo_num);
 
-	/* PRINTS ONE ELECTRON INTEGRALS
+/*
+	// PRINTS ONE ELECTRON INTEGRALS
 
 	printf("\n one electron integrals \n");
-			
+		
 	for (int i = 0; i < mo_num*mo_num; i++) {
             	printf("%f  ", one_int[i]);
+		
 			
 	}
 
-	*/
+*/	
 
 	//PRINTS INTEGRAL NUMBER n AND ITS FOUR BASIS FUNCTIONS
 	int n;	
@@ -184,14 +186,12 @@ int main(){
 
 	printf("integral_%d (%d, %d, %d ,%d) = %f\n]",n,i+1,j+1,k+1,l+1,value[n] );
 	
-	/*
 	rc = trexio_close(trexio_file);
 	if (rc != TREXIO_SUCCESS) {
   	printf("TREXIO Error: %s\n", trexio_string_of_error(rc));
 	exit(1);
 	 }
 	trexio_file = NULL;
-	*/
 	
 	//END OF READING VARIABLES
 
@@ -199,10 +199,13 @@ int main(){
 
 
 	double etotal;
-	double one_e_sum;
-	double two_e_sum;
+	double one_e_sum = 0.0;
+	double two_e_sum = 0.0;
+
 	for (int i=0; i < n_up; i++){
-		one_e_sum += one_int[i];
+		
+		printf("integral = %f \n", one_int[i*mo_num+i]);
+		one_e_sum += one_int[i*mo_num + i];
 	}
 
 	printf("\n one electron integral sum = %f \n" , one_e_sum);
@@ -214,15 +217,19 @@ int main(){
         	int k = index[4*n+2];
         	int l = index[4*n+3];
 			
-			if (i < n_up || j < n_up || k < n_up || l < n_up){
-				continue;
-			} 	
-			if (i == k && j == l){
-				two_e_sum += 2.0*value[n];
+					
+			if (i < n_up && j < n_up && k < n_up && l < n_up){
+			 	
+				if (i == k && j == l){
+  					printf("Integral_nosym %d: (i,j,k,l) = (%d,%d,%d,%d), Value 							= %f\n",n, i, j, k, l, value[n]);
+				
+					two_e_sum += 2.0*value[n];
+				}	
+				else if (i == l && j == k){
+					printf("Integral_sym %d: (i,j,k,l) = (%d,%d,%d,%d), Value                                                   = %f\n",n, i, j, k, l, value[n]);
+                                	two_e_sum -= value[n];
+                        	} 	  		
 			}
-			else if (i == l && j == k){
-                                two_e_sum -= value[n];
-                        } 	  		
 	}	
 /*
 	for (int n = 0; n < n_integrals; n++) {
@@ -236,7 +243,7 @@ int main(){
 	
 	double e;
 	
-	e = energy + 2*one_e_sum + two_e_sum;
+	e = energy + 2.0*one_e_sum + two_e_sum;
 	printf("\n FINAL ENERGY = %f \n", e);
 		
 	
