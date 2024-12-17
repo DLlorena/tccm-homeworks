@@ -202,6 +202,8 @@ int main(){
 	double one_e_sum = 0.0;
 	double two_e_sum = 0.0;
 
+		//ONE ELECTRON TERM CALCULATION
+
 	for (int i=0; i < n_up; i++){
 		
 		printf("integral = %f \n", one_int[i*mo_num+i]);
@@ -209,6 +211,9 @@ int main(){
 	}
 
 	printf("\n one electron integral sum = %f \n" , one_e_sum);
+
+
+		//TWO ELECTRON TERM COMPUTATION
 	
 	for (int n=0; n < n_integrals; n++){
 			
@@ -216,27 +221,24 @@ int main(){
        	 	int j = index[4*n+1];
         	int k = index[4*n+2];
         	int l = index[4*n+3];
-			
+		
 					
 			if (i < n_up && j < n_up && k < n_up && l < n_up){
 			 	
+			//	printf("Integral %d: (i,j,k,l) = (%d,%d,%d,%d), Value                                                     = %f\n",n, i, j, k, l, value[n]);				
 				if (i == k && j == l){
   					printf("Integral_nosym %d: (i,j,k,l) = (%d,%d,%d,%d), Value 							= %f\n",n, i, j, k, l, value[n]);
 				
 					two_e_sum += 2.0*value[n];
 				}	
-				else if (i == l && j == k){
+				if (i == l && j == k){
 					printf("Integral_sym %d: (i,j,k,l) = (%d,%d,%d,%d), Value                                                   = %f\n",n, i, j, k, l, value[n]);
                                 	two_e_sum -= value[n];
                         	} 	  		
 			}
 	}	
-/*
-	for (int n = 0; n < n_integrals; n++) {
-   		printf("Integral %d: (i,j,k,l) = (%d,%d,%d,%d), Value = %f\n",
-           n, i, j, k, l, value[n]);
-	}
-*/
+
+
 	printf("\n two electron integral sum = %f \n" , two_e_sum);
 
 	//FINAL ENERGY
