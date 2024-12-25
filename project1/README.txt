@@ -19,6 +19,3 @@ This output file contains HF energy and MP2 correction, also selected data invol
 
 Program also gives the possibility of displaying in terminal specific two electron integrals. The lines to do it remain commented as default between 275-285 lines. Indexes i, j, k, l have to be initialized (i=1, j=2 , k=3, l=4 as default).
 
-
-
-:276
