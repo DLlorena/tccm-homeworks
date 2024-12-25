@@ -4,43 +4,88 @@
 #include <stdint.h>
 
 
-double** malloc_2d(size_t m, size_t n) { // Allocating function provide by the teachers
-        double** a = malloc(m*sizeof(double*));
-        if (a == NULL) {
-                perror("Error allocating the memory");
-        return NULL;
-	}
-        a[0] = malloc(n*m*sizeof(double));
-        if (a[0] == NULL) {
-                free(a);
-        return NULL;
-	}
-        for (size_t i=1 ; i<m ; i++) {
-                a[i] = a[i-1]+n;
+// Function to dynamically allocate a 4D array of size [size_i][size_j][size_k][size_l]
+
+double ****allocate_two_e_int(int size_i, int size_j, int size_k, int size_l) {
+
+    double ****array = (double ****)malloc(size_i * sizeof(double ***));
+
+    for (int i = 0; i < size_i; i++) {
+        array[i] = (double ***)malloc(size_j * sizeof(double **)); // size_j for second dimension
+        for (int j = 0; j < size_j; j++) {
+            array[i][j] = (double **)malloc(size_k * sizeof(double *)); // size_k for third dimension
+            for (int k = 0; k < size_k; k++) {
+                array[i][j][k] = (double *)malloc(size_l * sizeof(double)); // size_l for fourth dimension
+            }
         }
-        return a;
+    }
+
+    return array;
 }
 
-void free_2d(double** a) { // Freeing function provide by the teachers
-        free(a[0]);
-        a[0] = NULL;
-        free(a);
+// Function to free a 4D array
+void free_integral_array(double ****array, int size_i, int size_j, int size_k, int size_l) {
+    for (int i = 0; i < size_i; i++) {
+        for (int j = 0; j < size_j; j++) {
+            for (int k = 0; k < size_k; k++) {
+                free(array[i][j][k]);
+            }
+            free(array[i][j]);
+        }
+        free(array[i]);
+    }
+    free(array);
 }
 
 
-
-
-int main(){
+int main(int argc, char *argv[]){
 	
+	if (argc < 2) {
+    		printf("Usage: %s molecule file missing\n", argv[0]);
+    	return 1;
+	}
+
+	if (argc > 2) {
+    		printf("Usage: %s more than one molecule file was provided\n", argv[0]);
+    	return 1;
+	}
+
+	char *molecule_file = argv[1];
+	char *molecules_directory = "./data/";
+	char filepath[256];
+
+	snprintf(filepath,sizeof(filepath), "%s%s", molecules_directory, argv[1]);
+
+	char output_filename[256];
+	snprintf(output_filename,sizeof(output_filename), "%s.out",  argv[1]);
+	
+	FILE *output = fopen(output_filename, "w");
+
+	if (output == NULL){
+	        printf("Error creating output %s.\n",output_filename );
+		return 1;
+	}
+
+
+	fprintf(output," ____  _  _  ____  __                  _  _  ____     _     _  _  ____  ____ \n");	
+    	fprintf(output,"(    \\( \\/ )(    \\(  )     ___  ___   / )( \\(  __)   ( )   ( \\/ )(  _ \\(___ \\ \n");
+    	fprintf(output," ) D ( )  /  ) D (/ (_/\\  (___)(___)  ) __ ( ) _)   (_ _)  / \\/ \\ ) __/ / __/ \n");
+    	fprintf(output,"(____/(__/  (____/\\____/              \\_)(_/(__)     (_)   \\_)(_/(__)  (____) \n");	
+
+	fprintf(output,"\n");
+	fprintf(output, "----------------------Calculations performed for %s----------------------\n", argv[1]);
+
+	fprintf(output,"\n#All results are presented in atomic units \n");
+ 
 	//OPENING FILE
 
 	trexio_exit_code rc;
-	trexio_t* trexio_file = trexio_open("./data/h2o.h5",'r', TREXIO_AUTO, &rc);
+	trexio_t* trexio_file = trexio_open(filepath,'r', TREXIO_AUTO, &rc);
 	if (rc != TREXIO_SUCCESS) {
 		printf("TREXIO Error: %s\n", trexio_string_of_error(rc));
 		exit(1);
 	}
-
+	printf("Reading file %s succesfully\n", filepath);
 
 	//READING NUCLEUS REPULSIONS
 
@@ -87,12 +132,7 @@ int main(){
 
 	 trexio_exit_code trexio_read_mo_1e_int_core_hamiltonian(trexio_t* const trexio_file, double* const data);
 
-	//double** one_int = malloc_2d(mo_num, mo_num); //works passing the values of one_int
-	//malloc_2d functions reutrns a pointer to a pointer, then one_int is a doueble*** (pointer to pointer to pointer toa  dobule)
-
      	 double* one_int = malloc(mo_num * mo_num * sizeof(double));
-	 //works flattening a introducing directly a pointer to a pointer. malloc function returns a pointer, then one_int is a pointei to a pointer to a double.
-
 
          rc = trexio_read_mo_1e_int_core_hamiltonian(trexio_file, one_int);
          if (rc != TREXIO_SUCCESS) {
@@ -115,8 +155,6 @@ int main(){
                 exit(1);
 	}
 
-	//printf("Number of integrals non-zero integrals = %lld", n_integrals);
-
 
 	trexio_exit_code trexio_read_mo_2e_int_eri(trexio_t* const file,
                                            const int64_t offset_file,
@@ -124,7 +162,7 @@ int main(){
                                            int32_t* const index,
                                            double* const value);
 	
-	int64_t buffer_side = n_integrals;
+	int64_t buffer_size = n_integrals;
 	int32_t* const index = malloc(4 * n_integrals * sizeof(int32_t));
 	if (index == NULL) {
   		fprintf(stderr, "Malloc failed for index");
@@ -135,57 +173,68 @@ int main(){
   		fprintf(stderr, "Malloc failed for value");
 		exit(1);
 	 }
-         rc = trexio_read_mo_2e_int_eri(trexio_file, 0, &buffer_side, index, value);
+
+	
+         rc = trexio_read_mo_2e_int_eri(trexio_file, 0, &buffer_size, index, value);
          if (rc != TREXIO_SUCCESS) {
                 printf("TREXIO Error reading two electron integrals:\n%s\n",
                 trexio_string_of_error(rc));
                 exit(1);
          }
+		
 
-	// PRINTS INDEXES OF THE INTEGRALS (EACH 4 IS AN INTEGRAL) AND INTEGRALS
-/*	
-	printf("buffer_side %lld",buffer_side);
-	for (int i=0; i<n_integrals*4+1; i++){
-		printf(" %d ",index[i]);
-	}
-*/
+	//PREPARATION OF A 4D ARRAY TO STORE TWO ELECTRON INTEGRALS
 	
-
-
-/*
-        for (int i=0; i < n_integrals+1; i++){
-                printf("%f   ", value[i]);
-        }					
-*/
-
-
-	printf("repulsion energy = %lf\n",energy);
-	printf("occupied orbitals = %d\n",n_up);
-	printf("total molecular orbitals = %d\n",mo_num);
-
-/*
-	// PRINTS ONE ELECTRON INTEGRALS
-
-	printf("\n one electron integrals \n");
+	int size_i, size_j, size_k, size_l;
+	double ****two_e_int = allocate_two_e_int(mo_num, mo_num, mo_num, mo_num);
+	
+	for (int n=0; n<n_integrals; n++){
+		int i = index[4*n+0];
+        	int j = index[4*n+1];
+        	int k = index[4*n+2];
+        	int l = index[4*n+3];
 		
-	for (int i = 0; i < mo_num*mo_num; i++) {
-            	printf("%f  ", one_int[i]);
-		
-			
+		two_e_int[i][j][k][l] = value[n];
+		two_e_int[k][l][i][j] = value[n];
+		two_e_int[k][j][i][l] = value[n];
+		two_e_int[i][l][k][j] = value[n];
+		two_e_int[j][i][l][k] = value[n];
+		two_e_int[l][k][j][i] = value[n];
+		two_e_int[j][k][l][i] = value[n];
+		two_e_int[l][i][j][k] = value[n];
+
+		//prints all two electron integrals
+		//printf("\n integral_two_e(%d,%d,%d,%d) = %f \n",i,j,k,l,two_e_int[i][j][k][l]); 		
 	}
 
-*/	
-
-	//PRINTS INTEGRAL NUMBER n AND ITS FOUR BASIS FUNCTIONS
-	int n;	
-	int i = index[4*n+0];
-	int j = index[4*n+1];
-	int k = index[4*n+2];
-	int l = index[4*n+3];
-	double integral = value[n];	
-
-	printf("integral_%d (%d, %d, %d ,%d) = %f\n]",n,i+1,j+1,k+1,l+1,value[n] );
 	
+	
+	//READING ORBITAL ENERGIES FOR MP2
+	
+	trexio_exit_code trexio_read_mo_energy(trexio_t* const file,
+                                            double* const mo_energy);
+	double* const mo_energy = malloc(mo_num * sizeof(double));
+		
+	rc = trexio_read_mo_energy(trexio_file, mo_energy);
+        if (rc != TREXIO_SUCCESS) {
+                printf("TREXIO Error reading molecular orbitals:\n%s\n",
+                trexio_string_of_error(rc));
+                exit(1);
+	}
+
+		
+	printf("\nrepulsion energy = %lf\n",energy);
+	fprintf(output,"\nrepulsion energy = %lf\n",energy);	
+
+	printf("\noccupied orbitals = %d\n",n_up);
+        fprintf(output,"\noccupied orbitals = %d\n",n_up);
+
+	printf("\ntotal molecular orbitals = %d\n",mo_num);
+        fprintf(output,"\ntotal molecular orbitals = %d\n",mo_num);
+
+	
+	//CLOSE FILE	
+
 	rc = trexio_close(trexio_file);
 	if (rc != TREXIO_SUCCESS) {
   	printf("TREXIO Error: %s\n", trexio_string_of_error(rc));
@@ -195,63 +244,82 @@ int main(){
 	
 	//END OF READING VARIABLES
 
-	//HARTREE FOCK ALGORITHM
+	//HARTREE FOCK ENEGRY COMPUTATION
 
 
 	double etotal;
-	double one_e_sum = 0.0;
-	double two_e_sum = 0.0;
+	double one_e_sum;
+	double two_e_sum;
 
-		//ONE ELECTRON TERM CALCULATION
+		//ONE ELECTRON TERM
 
 	for (int i=0; i < n_up; i++){
-		
-		printf("integral = %f \n", one_int[i*mo_num+i]);
 		one_e_sum += one_int[i*mo_num + i];
 	}
 
-	printf("\n one electron integral sum = %f \n" , one_e_sum);
+	printf("\none electron integral term  = %f \n" ,2*one_e_sum);
+        fprintf(output,"\none electron integral term  = %f \n" ,2*one_e_sum);
 
-
-		//TWO ELECTRON TERM COMPUTATION
+		//TWO ELECTRON TERM
 	
-	for (int n=0; n < n_integrals; n++){
-			
-		int i = index[4*n+0];
-       	 	int j = index[4*n+1];
-        	int k = index[4*n+2];
-        	int l = index[4*n+3];
-		
-					
-			if (i < n_up && j < n_up && k < n_up && l < n_up){
-			 	
-			//	printf("Integral %d: (i,j,k,l) = (%d,%d,%d,%d), Value                                                     = %f\n",n, i, j, k, l, value[n]);				
-				if (i == k && j == l){
-  					printf("Integral_nosym %d: (i,j,k,l) = (%d,%d,%d,%d), Value 							= %f\n",n, i, j, k, l, value[n]);
-				
-					two_e_sum += 2.0*value[n];
-				}	
-				if (i == l && j == k){
-					printf("Integral_sym %d: (i,j,k,l) = (%d,%d,%d,%d), Value                                                   = %f\n",n, i, j, k, l, value[n]);
-                                	two_e_sum -= value[n];
-                        	} 	  		
-			}
+	for (int i=0; i < n_up; i++){
+		for (int j=0; j<n_up; j++){
+			two_e_sum += 2 * two_e_int[i][j][i][j]  - two_e_int[i][j][j][i];		
+
+		}
 	}	
 
+	printf("\ntwo electron integral term = %f \n" , two_e_sum);
+        fprintf(output,"\ntwo electron integral term = %f \n" , two_e_sum);
 
-	printf("\n two electron integral sum = %f \n" , two_e_sum);
+/*
+	//PRINTS A SPECIFIC TWO ELECTRON INTEGRAL INITIALIZING i, j, k, l
 
-	//FINAL ENERGY
+	int i = 1;
+	int j = 2;
+	int k = 3;
+	int l = 4;
+
+	printf("two electron integral (%d,%d,%d,%d) = %f\n", i,j,k,l, two_e_int[i][j][k][l]);
+		
+*/
+	//HF FINAL ENERGY
 	
 	double e;
 	
 	e = energy + 2.0*one_e_sum + two_e_sum;
-	printf("\n FINAL ENERGY = %f \n", e);
+	printf("\nHF ENERGY = %f \n", e);
+        fprintf(output,"\nHF ENERGY = %f \n", e);
+
 		
+	free(value);
+	free(index);
+	free(one_int);
+	
+	//MP2 ENERGIES COMPUTATION
+	
+	double e_mp2;
+
+	for (int i=0; i < n_up; i++){
+        	        for (int j=0; j<n_up; j++){
+                	        for (int a=n_up; a < mo_num; a++){
+                        	        for (int b=n_up; b < mo_num; b++){
+	
+        	                                e_mp2 += (two_e_int[i][j][a][b] * (2*two_e_int[i][j][a][b] - two_e_int[i][j][b][a])) / (mo_energy[i] + mo_energy[j] - mo_energy[a] - mo_energy[b]);
+ 
+                	                }
+                        	}
+			}	
+	}
+	printf("\nMP2 ENERGY CORRECTION = %.8lf \n", e_mp2);		 	 
+        fprintf(output,"\nMP2 ENERGY CORRECTION = %.8lf \n", e_mp2);
 	
 
 
-
+	free(two_e_int);			
+	
+	fprintf(output,"\nHARTREEFOCKATION PERFORMED SUCCESFULLY");
+	
 }
 
 

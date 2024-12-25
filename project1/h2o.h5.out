@@ -1,0 +1,24 @@
+ ____  _  _  ____  __                  _  _  ____     _     _  _  ____  ____ 
+(    \( \/ )(    \(  )     ___  ___   / )( \(  __)   ( )   ( \/ )(  _ \(___ \ 
+ ) D ( )  /  ) D (/ (_/\  (___)(___)  ) __ ( ) _)   (_ _)  / \/ \ ) __/ / __/ 
+(____/(__/  (____/\____/              \_)(_/(__)     (_)   \_)(_/(__)  (____) 
+
+----------------------Calculations performed for h2o.h5----------------------
+
+#All results are presented in atomic units 
+
+repulsion energy = 9.194966
+
+occupied orbitals = 5
+
+total molecular orbitals = 24
+
+one electron integral term  = -123.151186 
+
+two electron integral term = 37.929422 
+
+HF ENERGY = -76.026799 
+
+MP2 ENERGY CORRECTION = -0.20395997 
+
+HARTREEFOCKATION PERFORMED SUCCESFULLY

@@ -1,0 +1,24 @@
+ ____  _  _  ____  __                  _  _  ____     _     _  _  ____  ____ 
+(    \( \/ )(    \(  )     ___  ___   / )( \(  __)   ( )   ( \/ )(  _ \(___ \ 
+ ) D ( )  /  ) D (/ (_/\  (___)(___)  ) __ ( ) _)   (_ _)  / \/ \ ) __/ / __/ 
+(____/(__/  (____/\____/              \_)(_/(__)     (_)   \_)(_/(__)  (____) 
+
+----------------------Calculations performed for co2.h5----------------------
+
+#All results are presented in atomic units 
+
+repulsion energy = 58.286450
+
+occupied orbitals = 11
+
+total molecular orbitals = 42
+
+one electron integral term  = -372.281408 
+
+two electron integral term = 126.344248 
+
+HF ENERGY = -187.650711 
+
+MP2 ENERGY CORRECTION = -0.48867461 
+
+HARTREEFOCKATION PERFORMED SUCCESFULLY
