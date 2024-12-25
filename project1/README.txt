@@ -11,7 +11,7 @@ HF_MP2 executable is used in presence of the molecule file name as argument. Mol
 
 If the path where molecule files are stored needs to be modified, it could be done by changing variable "molecules_directory" in line 54 in "Project1_DYH_DLP.c". Defined as default as "./data/".
 
-Once the program is executed results will be shown in the terminal and also will generate an output file in the form off:
+Once the program is executed results will be shown in the terminal and also will generate an output file in the form of:
 
 >> h2o.h5.out
 
