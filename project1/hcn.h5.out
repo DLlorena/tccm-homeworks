@@ -1,0 +1,24 @@
+ ____  _  _  ____  __                  _  _  ____     _     _  _  ____  ____ 
+(    \( \/ )(    \(  )     ___  ___   / )( \(  __)   ( )   ( \/ )(  _ \(___ \ 
+ ) D ( )  /  ) D (/ (_/\  (___)(___)  ) __ ( ) _)   (_ _)  / \/ \ ) __/ / __/ 
+(____/(__/  (____/\____/              \_)(_/(__)     (_)   \_)(_/(__)  (____) 
+
+----------------------Calculations performed for hcn.h5----------------------
+
+#All results are presented in atomic units 
+
+repulsion energy = 23.878820
+
+occupied orbitals = 7
+
+total molecular orbitals = 33
+
+one electron integral term  = -172.509361 
+
+two electron integral term = 55.747594 
+
+HF ENERGY = -92.882947 
+
+MP2 ENERGY CORRECTION = -0.28927533 
+
+HARTREEFOCKATION PERFORMED SUCCESFULLY
