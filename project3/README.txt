@@ -7,6 +7,9 @@ To compile the project, you will have to use the next command:
                                                
 To execute the executable you will use this command:
 >> ./Project3.exe
+
+It will generate an output fille named: "outputDYH_DLP.xyz". 
+The output shows the number of atoms, kinetic, potential and total energy and the 3 coordinates of each atom in every step.
                                                
 To visualize the results we recommend use Molden. You can load the output file by this way:
 >> molden outputDYH_DLP.xyz                                              
