@@ -144,7 +144,7 @@ void write_xyz(FILE* file, size_t Natoms, double** coord, const char* atom_symbo
                double kinetic_energy, double potential_energy, double E_tot) {
 // We have created a function which prints an output with the correct format to load in programs like Molden    
    
-       	fprintf(file,"%zu\n", Natoms);
+       	fprintf(file,"Number of atoms: %zu\n", Natoms);
 	// Molden reads the number of atoms (Only the integer)
 	// Molden does not read the second line, ergo we have decided to print the kinetic, potential and total energies.
 	// We also have chosen that we will use 6 decimal numbers to describe the energy and the coordinates
