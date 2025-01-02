@@ -354,7 +354,9 @@ int main(int argc, char *argv[]){	//program is executed with arguments needed, b
 
 	//Calls function to free memory of a 4D array.
 	free(two_e_int);			
-	
+
+
+	//Code has been executed succesfully	
 	fprintf(output,"\nHARTREEFOCKATION PERFORMED SUCCESFULLY");
 	
 }
