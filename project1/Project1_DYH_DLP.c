@@ -236,7 +236,6 @@ int main(int argc, char *argv[]){	//program is executed with arguments needed, b
 		//prints all two electron integrals
 		//printf("\n integral_two_e(%d,%d,%d,%d) = %f \n",i,j,k,l,two_e_int[i][j][k][l]); 		
 	}
-
 	
 	
 	//READING ORBITAL ENERGIES FOR MP2
@@ -316,7 +315,6 @@ int main(int argc, char *argv[]){	//program is executed with arguments needed, b
 	int l = 4;
 
 	printf("two electron integral (%d,%d,%d,%d) = %f\n", i,j,k,l, two_e_int[i][j][k][l]);
-		
 */
 	//HF FINAL ENERGY
 	
