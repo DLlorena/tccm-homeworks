@@ -232,9 +232,7 @@ int main(int argc, char *argv[]){	//program is executed with arguments needed, b
 		two_e_int[l][k][j][i] = value[n];
 		two_e_int[j][k][l][i] = value[n];
 		two_e_int[l][i][j][k] = value[n];
-
-		//prints all two electron integrals
-		//printf("\n integral_two_e(%d,%d,%d,%d) = %f \n",i,j,k,l,two_e_int[i][j][k][l]); 		
+		
 	}
 	
 	
