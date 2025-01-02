@@ -1,7 +1,7 @@
-#include <trexio.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
+#include <trexio.h>		//Library for trexio functions 
+#include <stdio.h>		//Library for printing
+#include <stdlib.h>		//Library for array memory allocation
+#include <stdint.h>		//Library for fixed-width integers
 
 
 // Function to dynamically allocate a 4D array of size [size_i][size_j][size_k][size_l]
@@ -37,10 +37,10 @@ void free_integral_array(double ****array, int size_i, int size_j, int size_k, i
     free(array);
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////
-/*
-This programs intends to calculate Hartree Fock energy and MP2 correction for specific molecules. The data for each molecule is stored in HDF5 format files and the data is extracted using trexio libraries
-*/
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//This programs intends to calculate Hartree Fock energy and MP2 correction for specific molecules. The data for each molecule is stored in HDF5 format files and the data is extracted using trexio libraries
+
 
 int main(int argc, char *argv[]){	//program is executed with arguments needed, being the first argument argv[0] the program itself
 	
@@ -275,8 +275,9 @@ int main(int argc, char *argv[]){	//program is executed with arguments needed, b
 	
 	//END OF READING DATA
 
-	//HARTREE FOCK ENEGRY COMPUTATION
+////////////////////////////////////////////////////COMPUTATION SECTION//////////////////////////////////////////////////////////////////
 
+	//HARTREE FOCK ENEGRY COMPUTATION
 
 	double etotal;
 	double one_e_sum;
